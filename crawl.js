@@ -1,7 +1,31 @@
 module.exports = {
 normalizeUrl
-,gettheUrlfromHtml
+,gettheUrlfromHtml,crawlpages
 }
+async function crawlpages(currentUrl) {
+console.log(`actively crawling ${currentUrl}`)
+try{
+const resp = await fetch(currentUrl);
+if(resp.status>399){
+    console.log(`error is detected in crawling status code ${resp.status}and current url is ${currentUrl}`);
+    return;
+} 
+const contentType = resp.headers.get('content-type')
+if (!contentType.includes('text/html')){
+  console.log(`Got non-html response: ${contentType}`)
+  return
+}
+console.log(await resp.text());
+}
+catch(e){
+    console.log(`error in detected in creawling ${currentUrl}:${e.message}`);
+}
+}
+
+
+
+
+
 function normalizeUrl(url){
     const urlobj = new URL(url);
     let fullpath =  urlobj.host+urlobj.pathname;
