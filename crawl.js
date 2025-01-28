@@ -2,8 +2,19 @@ module.exports = {
 normalizeUrl
 ,gettheUrlfromHtml,crawlpages
 }
-async function crawlpages(currentUrl) {
-console.log(`actively crawling ${currentUrl}`)
+async function crawlpages( baseurl,currentUrl,pages) {
+const baseurlobj = new URL(baseurl);
+const currenturlobj = new URL(currentUrl);
+if(baseurlobj.hostname !== currenturlobj.hostname){
+    return pages;
+}
+const normalizedURL = normalizeUrl(currentUrl)
+if (pages[normalizedURL] > 0){
+  pages[normalizedURL]++
+  return pages
+}
+pages[normalizedURL] = 1
+    console.log(`actively crawling ${currentUrl}`)
 try{
 const resp = await fetch(currentUrl);
 if(resp.status>399){
@@ -13,13 +24,18 @@ if(resp.status>399){
 const contentType = resp.headers.get('content-type')
 if (!contentType.includes('text/html')){
   console.log(`Got non-html response: ${contentType}`)
-  return
+  return pages;
 }
-console.log(await resp.text());
+const htmlbody = await resp.text();
+const nexturls = gettheUrlfromHtml(htmlbody,currentUrl);
+for (const nexturl of nexturls){
+    pages = await crawlpages(baseurl,nexturl,pages); 
+}
 }
 catch(e){
     console.log(`error in detected in creawling ${currentUrl}:${e.message}`);
 }
+return pages;
 }
 
 
@@ -50,9 +66,9 @@ for(const aelement of aelements){
 }
 else{
     try {
-        urls.push(new URL(aElement.href).href)
+        urls.push(new URL(aelement.href).href)
       } catch (err){
-        console.log(`${err.message}: ${aElement.href}`)
+        console.log(`${err.message}: ${aelement.href}`)
       }
 }
 }
