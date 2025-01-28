@@ -1,0 +1,26 @@
+{
+  "name": "web-scrawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ayu9284/web-scrawler.git"
+  },
+  "author": "Ayush",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ayu9284/web-scrawler/issues"
+  },
+  "homepage": "https://github.com/Ayu9284/web-scrawler#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "jsdom": "^26.0.0"
+  }
+}
